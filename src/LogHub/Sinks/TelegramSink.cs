@@ -47,4 +47,5 @@ public sealed class TelegramSinkFactory : ILogSinkFactory
 
         return new TelegramSink(token, chat);
     }
+
 }
