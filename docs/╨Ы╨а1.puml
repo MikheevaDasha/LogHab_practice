@@ -1,0 +1,51 @@
+@startuml
+left to right direction
+class Program <<композиционный корень>>
+package Config { class LogHubConfig }
+package Processing { class LogProcessor
+class PluginCatalog }
+package Parsing { interface ILogParser
+class PlainTextLogParser
+ILogParser <|.. PlainTextLogParser }
+package Formatting { interface ILogFormatter
+class FormatterRegistry
+class PlainFormatter
+class JsonFormatter
+class MessageOnlyFormatter
+ILogFormatter <|.. PlainFormatter
+ILogFormatter <|.. JsonFormatter
+ILogFormatter <|.. MessageOnlyFormatter
+FormatterRegistry o-- ILogFormatter }
+package Sinks { interface ILogSink
+interface ILogSinkFactory
+interface IConsoleOutput
+interface ILogFileStore
+class SinkRegistry
+class ConsoleSink
+class RotatingFileSink
+class TelegramSink
+class ConsoleSinkFactory
+class FileSinkFactory
+class TelegramSinkFactory
+class SystemConsoleOutput
+class DiskLogFileStore
+ILogSink <|.. ConsoleSink
+ILogSink <|.. RotatingFileSink
+ILogSink <|.. TelegramSink
+ILogSinkFactory <|.. ConsoleSinkFactory
+ILogSinkFactory <|.. FileSinkFactory
+ILogSinkFactory <|.. TelegramSinkFactory
+IConsoleOutput <|.. SystemConsoleOutput
+ILogFileStore <|.. DiskLogFileStore
+ConsoleSink --> IConsoleOutput
+RotatingFileSink --> ILogFileStore
+SinkRegistry o-- ILogSinkFactory }
+Program --> LogHubConfig
+Program --> LogProcessor
+Program --> PluginCatalog
+Program --> SinkRegistry
+Program --> FormatterRegistry
+LogProcessor --> ILogParser
+LogProcessor --> ILogFormatter
+LogProcessor --> ILogSink
+@enduml
